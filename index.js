@@ -2,6 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -32,6 +33,14 @@ app.delete('/api/product/:productId', (req, res) => {
 
 })
 
-app.listen(3000, () => {
-  console.log(`Server runing at http://localhost:${port}`)
+mongoose.connect('mongodb://localhost:27017/shop', (err, res) => {
+  if (err) {
+    return console.log(`Error trying to connect to the DB. MongoError: ${err}`)
+  }
+
+  console.log('DB connection established')
+
+  app.listen(3000, () => {
+    console.log(`Server runing at http://localhost:${port}`)
+  })
 })
