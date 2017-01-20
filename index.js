@@ -55,12 +55,30 @@ app.post('/api/product', (req, res) => {
 })
 
 app.put('/api/product/:productId', (req, res) => {
+  let productId = req.params.productId
+  let update = req.body
 
+  Product.findByIdAndUpdate(productId, update, (err, product) => {
+    if (err)
+      return res.status(500).send({ message: 'An error has ocurred while trying to update'})
+    res.status(200).send({product})
+  })
 })
 
 app.delete('/api/product/:productId', (req, res) => {
+  let productId = req.params.productId
 
+  Product.findById(productId, (err, product) => {
+    if (err)
+      res.status(500).send({ message: `An error has been ocurred ${err}`})
+    product.remove(err => {
+      if(err)
+        res.status(500).send({ message: `An error has been ocurred ${err}`})
+      res.status(200).send({ message: 'The product has been deleted correctly'})
+    })
+  })
 })
+
 
 mongoose.connect('mongodb://localhost:27017/shop', (err, res) => {
   if (err) {
